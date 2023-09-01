@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Hreader from "./hreader";
-import Footer from "./footer";
+import Hreader from "./components/hreader";
+import Footer from "./components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head />
       <body className={inter.className}>
         <>
           <Hreader />
