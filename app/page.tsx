@@ -1,5 +1,6 @@
-import Image from "next/image";
 'use client';
+import Image from "next/image";
+import Seo from "./components/seo";
 
 export default function Home() {
   async function test()  {
@@ -9,6 +10,7 @@ export default function Home() {
   }
   return (
     <div>
+      <Seo title="HOME"/>
       <button onClick={test}>test</button>
     </div>
   );

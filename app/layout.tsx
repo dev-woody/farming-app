@@ -17,13 +17,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={inter.className}>
-        <>
+        <div className="flex flex-col w-screen h-screen">
           <Hreader />
+          <div className="grow">
           {children}
+          </div>
           <Footer />
-        </>
+        </div>
       </body>
     </html>
   );
