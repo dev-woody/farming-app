@@ -9,7 +9,7 @@ try {
         password: process.env.DB_PASSWORD,
         host: process.env.DB_HOST,
         port: process.env.DB_PORT,
-        database: "farming_app"
+        database: process.env.database
 });
 } catch (err) {
     console.error(err);
