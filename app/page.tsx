@@ -4,7 +4,7 @@ import Seo from "./components/seo";
 
 export default function Home() {
   async function test() {
-    await fetch("http://localhost:3000/api/users")
+    await fetch("http://localhost:3000/api/users/findAll")
       .then((res) => res.json)
       .then((data) => console.log(data));
   }

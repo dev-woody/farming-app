@@ -1,6 +1,28 @@
+"use client";
+
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+interface SubmitForm {
+  user_id: string;
+  password: string;
+}
+
+const schema = yup.object({
+  user_id: yup.string().required("아이디를 입력해주세요."),
+  password: yup.string().required("비밀번호를 입력해주세요."),
+});
 
 export default function SignIn() {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<SubmitForm>({
+    resolver: yupResolver(schema),
+  });
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto flex flex-wrap items-center">
@@ -14,20 +36,26 @@ export default function SignIn() {
           </p>
         </div>
         <form
-          onSubmit={(e) => console.log(e)}
+          onSubmit={handleSubmit(
+            (data) => console.log(data),
+            (errors) => console.log(errors),
+          )}
           className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
         >
           <h2 className="text-gray-900 text-lg font-medium title-font mb-5">
             로그인
           </h2>
           <div className="relative mb-4">
-            <label htmlFor="userId" className="leading-7 text-sm text-gray-600">
+            <label
+              htmlFor="user_id"
+              className="leading-7 text-sm text-gray-600"
+            >
               아이디
             </label>
             <input
               type="text"
-              id="userId"
-              name="userId"
+              id="user_id"
+              {...register("user_id")}
               className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
@@ -41,7 +69,7 @@ export default function SignIn() {
             <input
               type={"password"}
               id="password"
-              name="password"
+              {...register("password")}
               className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
