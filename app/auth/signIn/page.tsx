@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface SubmitForm {
   user_id: string;
@@ -16,6 +18,15 @@ const schema = yup.object({
 });
 
 export default function SignIn() {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(
+    (data: any) =>
+      axios
+        .post("http://localhost:3000/api/signIn", { ...data })
+        .then((res) => res.data),
+    { onSuccess: () => queryClient.invalidateQueries(["user"]) },
+  );
+
   const {
     register,
     handleSubmit,
@@ -37,7 +48,7 @@ export default function SignIn() {
         </div>
         <form
           onSubmit={handleSubmit(
-            (data) => console.log(data),
+            (data) => mutate(data),
             (errors) => console.log(errors),
           )}
           className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
