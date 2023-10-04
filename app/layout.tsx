@@ -7,12 +7,12 @@ import Providers from "./components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Home",
+  title: "Farmen",
   openGraph: {
-    title: "Farming",
-    description: "The React Framework for the Web",
+    title: "Farmen",
+    description: "원하는 농산물을 저렴하게 파먼에서!",
     url: "https://localhost:3000",
-    siteName: "Farming",
+    siteName: "Farmen",
     images: [
       {
         url: "https://nextjs.org/og.png",
@@ -37,14 +37,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={inter.className}>
-        <div className="flex flex-col w-screen h-screen">
+      <body
+        className={inter.className + " flex flex-col min-w-screen min-h-screen"}
+      >
+        <Providers>
           <Header />
-          <Providers>
-            <div className="grow">{children}</div>
-          </Providers>
+          <div className="grow">{children}</div>
           <Footer />
-        </div>
+        </Providers>
       </body>
     </html>
   );

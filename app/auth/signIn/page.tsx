@@ -4,8 +4,10 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { signIn } from "@/app/api/users";
+import Cookies from "js-cookie";
 
 interface SubmitForm {
   user_id: string;
@@ -19,13 +21,16 @@ const schema = yup.object({
 
 export default function SignIn() {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(
-    (data: any) =>
-      axios
-        .post("http://localhost:3000/api/signIn", { ...data })
-        .then((res) => res.data),
-    { onSuccess: () => queryClient.invalidateQueries(["user"]) },
-  );
+  const { mutate } = useMutation((userData: SubmitForm) => signIn(userData), {
+    onSuccess: (data) => {
+      Cookies.set("access_token", JSON.stringify(data.accessToken), {
+        expires: 7,
+      });
+      queryClient.invalidateQueries(["user", data]);
+      route.push("/");
+    },
+  });
+  const route = useRouter();
 
   const {
     register,
@@ -48,7 +53,9 @@ export default function SignIn() {
         </div>
         <form
           onSubmit={handleSubmit(
-            (data) => mutate(data),
+            (data) => {
+              mutate(data);
+            },
             (errors) => console.log(errors),
           )}
           className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0"
@@ -67,7 +74,7 @@ export default function SignIn() {
               type="text"
               id="user_id"
               {...register("user_id")}
-              className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-teal-600 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
           <div className="relative mb-4">
@@ -81,21 +88,21 @@ export default function SignIn() {
               type={"password"}
               id="password"
               {...register("password")}
-              className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
+              className="w-full bg-white rounded border border-gray-300 focus:border-teal-600 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
             />
           </div>
-          {/* <button className="mb-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+          {/* <button className="mb-4 text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
             네이버 로그인
           </button>
-          <button className="mb-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+          <button className="mb-4 text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
             카카오 로그인
           </button>
-          <button className="mb-4 text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
+          <button className="mb-4 text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">
             구글 로그인
           </button> */}
           <button
             type="submit"
-            className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            className="text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
           >
             로그인
           </button>

@@ -1,11 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  QueryClientProvider,
-  QueryClient,
-  Hydrate,
-} from "@tanstack/react-query";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 type Props = {
@@ -27,10 +23,8 @@ function Providers({ children }: Props) {
 
   return (
     <QueryClientProvider client={client}>
-      {/* <Hydrate state={pageProps.dehydratedProps}> */}
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
-      {/* </Hydrate> */}
     </QueryClientProvider>
   );
 }

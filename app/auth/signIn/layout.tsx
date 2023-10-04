@@ -1,16 +1,11 @@
-import getQueryClient from "@/pages/api/hooks/getQueryClient";
+import { getUsers } from "@/app/api/users";
+import getQueryClient from "@/pages/hooks/getQueryClient";
 import { Hydrate, dehydrate } from "@tanstack/react-query";
 
 export interface User {
   uuid: number;
   user_id: string;
   name: string;
-}
-
-async function getUsers() {
-  const response = await fetch("http://localhost:3000/api/users/findAll");
-  const users = (await response.json()) as User[];
-  return users;
 }
 
 export default async function Layout({
