@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 const access_token = JSON.parse(Cookies.get("access_token") || "null");
 
 export const customAxios = axios.create({
-  // withCredentials: true,
   headers: {
     "Content-Type": "application/json; charset=utf-8",
     validateStatus: false,

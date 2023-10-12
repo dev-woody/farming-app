@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { Suspense } from "react";
 import SignInBtn from "./signInBtn";
+import HeaderMenu from "@/app/components/menu";
 
 export default function Header() {
   return (
@@ -27,6 +28,11 @@ export default function Header() {
           </Link>
         </nav>
         <SignInBtn />
+        <div className="flex justify-end md:w-1/3">
+          {/* <Suspense fallback={<OpenCart />}> */}
+          <HeaderMenu />
+          {/* </Suspense> */}
+        </div>
       </div>
     </header>
   );

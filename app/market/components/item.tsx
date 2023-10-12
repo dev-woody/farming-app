@@ -7,8 +7,8 @@ type ItemProps = {
 
 export default function ItemBox({ productInfo }: ItemProps) {
   return (
-    <div className="p-4 md:w-1/3">
-      <Link href={`/market/${productInfo.uuid}`}>
+    <div className="p-4 md:w-1/3 w-full">
+      <Link href={`/market/${productInfo.id}`}>
         <div className="h-full rounded-lg overflow-hidden">
           <img
             className="lg:h-48 md:h-36 w-full object-cover object-center"
@@ -24,8 +24,8 @@ export default function ItemBox({ productInfo }: ItemProps) {
             </h1>
             <p className="leading-relaxed mb-3">{productInfo.description}</p>
             <div className="flex items-center flex-wrap justify-between">
-              <p className="text-red-500 inline-flex items-center lg:mb-0">
-                {productInfo.price} ₩
+              <p className="text-red-500 inline-flex line-through items-center lg:mb-0">
+                {productInfo.options[0]?.price} ₩
                 <svg
                   className="w-4 h-4 ml-2"
                   viewBox="0 0 24 24"
@@ -38,6 +38,9 @@ export default function ItemBox({ productInfo }: ItemProps) {
                   <path d="M5 12h14"></path>
                   <path d="M12 5l7 7-7 7"></path>
                 </svg>
+              </p>
+              <p className="text-red-500 inline-flex items-center lg:mb-0">
+                {productInfo.options[0]?.sale_price} ₩
               </p>
               <p>
                 <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">

@@ -3,7 +3,11 @@
 import { useState, useRef } from "react";
 import { customAxios } from "@/app/api/createAPI";
 
-export default function UploadImage() {
+interface IUploadImage {
+  imageValue: string;
+}
+
+export default function UploadImage({ imageValue }: IUploadImage) {
   const [image, setImage] = useState<string>("/potato.jpeg");
 
   const fileInput = useRef<HTMLInputElement | null>(null);
@@ -20,6 +24,7 @@ export default function UploadImage() {
     };
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("kind", imageValue);
     try {
       const imageRes = await customAxios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
