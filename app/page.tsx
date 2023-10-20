@@ -1,5 +1,3 @@
-import UploadImage from "./common/function/uploadImages";
-
 export default function Home() {
   return (
     <section className="text-gray-600 body-font">

@@ -4,7 +4,11 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { Bars4Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-export default function CartModal() {
+interface CartModalProps {
+  authUser: any;
+}
+
+export default function CartModal({ authUser }: CartModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
@@ -25,7 +29,7 @@ export default function CartModal() {
             leaveFrom="opacity-100 backdrop-blur-[.5px]"
             leaveTo="opacity-0 backdrop-blur-none"
           >
-            <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+            <div className="fixed inset-0 bg-white/30" aria-hidden="true" />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -36,9 +40,15 @@ export default function CartModal() {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl dark:border-neutral-700 dark:bg-black/80 dark:text-white md:w-[390px]">
+            {/* <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl dark:border-neutral-700 dark:bg-black/80 dark:text-white md:w-[390px]"> */}
+            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl">
               <div className="flex items-center justify-between">
-                <p className="text-lg font-semibold">사용자 정보</p>
+                <p className="text-lg font-semibold">
+                  <span className="font-bold text-teal-600">
+                    {authUser.name}
+                  </span>
+                  님 환영합니다.
+                </p>
 
                 <button aria-label="Close cart" onClick={closeCart}>
                   <XMarkIcon className="x-6 h-6" />

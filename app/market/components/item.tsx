@@ -6,6 +6,11 @@ type ItemProps = {
 };
 
 export default function ItemBox({ productInfo }: ItemProps) {
+  const totalReviw = productInfo?.reviews.length;
+  const reviewEval =
+    productInfo?.reviews
+      .map((item: any) => item.rating)
+      .reduce((a: any, c: any) => a + c, 0) / totalReviw || 0;
   return (
     <div className="p-4 md:w-1/3 w-full">
       <Link href={`/market/${productInfo.id}`}>
@@ -24,10 +29,12 @@ export default function ItemBox({ productInfo }: ItemProps) {
             </h1>
             <p className="leading-relaxed mb-3">{productInfo.description}</p>
             <div className="flex items-center flex-wrap justify-between">
-              <p className="text-red-500 inline-flex line-through items-center lg:mb-0">
-                {productInfo.options[0]?.price} ₩
+              <p className="text-red-500 inline-flex items-center lg:mb-0">
+                <span className="text-gray-400 line-through">
+                  {productInfo.options[0]?.price} ₩
+                </span>
                 <svg
-                  className="w-4 h-4 ml-2"
+                  className="w-4 h-4 mx-2"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -38,26 +45,11 @@ export default function ItemBox({ productInfo }: ItemProps) {
                   <path d="M5 12h14"></path>
                   <path d="M12 5l7 7-7 7"></path>
                 </svg>
-              </p>
-              <p className="text-red-500 inline-flex items-center lg:mb-0">
-                {productInfo.options[0]?.sale_price} ₩
+                <span className="font-semibold">
+                  {productInfo.options[0]?.sale_price} ₩
+                </span>
               </p>
               <p>
-                <span className="text-gray-400 mr-3 inline-flex items-center lg:ml-auto md:ml-0 ml-auto leading-none text-sm pr-3 py-1 border-r-2 border-gray-200">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                  1.2K
-                </span>
                 <span className="text-gray-400 inline-flex items-center leading-none text-sm">
                   <svg
                     className="w-4 h-4 mr-1"
@@ -68,9 +60,9 @@ export default function ItemBox({ productInfo }: ItemProps) {
                     strokeLinejoin="round"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
                   </svg>
-                  6
+                  {reviewEval}
                 </span>
               </p>
             </div>
