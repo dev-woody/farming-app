@@ -6,8 +6,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/app/api/users";
+// import { signIn } from "@/app/api/users";
 import Cookies from "js-cookie";
+import { signIn } from "next-auth/react";
 
 interface SubmitForm {
   user_id: string;
@@ -21,15 +22,15 @@ const schema = yup.object({
 
 export default function SignIn() {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation((userData: SubmitForm) => signIn(userData), {
-    onSuccess: (data) => {
-      Cookies.set("access_token", JSON.stringify(data.accessToken), {
-        expires: 7,
-      });
-      queryClient.invalidateQueries(["user", data]);
-      route.push("/");
-    },
-  });
+  // const { mutate } = useMutation((userData: SubmitForm) => signIn(userData), {
+  //   onSuccess: (data) => {
+  //     Cookies.set("access_token", JSON.stringify(data.accessToken), {
+  //       expires: 7,
+  //     });
+  //     queryClient.invalidateQueries(["user", data]);
+  //     route.push("/");
+  //   },
+  // });
   const route = useRouter();
 
   const {
@@ -54,7 +55,13 @@ export default function SignIn() {
         <form
           onSubmit={handleSubmit(
             (data) => {
-              mutate(data);
+              signIn("credentials", {
+                user_id: data.user_id,
+                password: data.password,
+                redirect: true,
+                callbackUrl: "/",
+              });
+              // mutate(data);
             },
             (errors) => console.log(errors),
           )}

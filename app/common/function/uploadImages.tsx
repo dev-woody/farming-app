@@ -26,7 +26,7 @@ export default function UploadImage({ imageValue }: IUploadImage) {
     formData.append("file", file);
     formData.append("kind", imageValue);
     try {
-      const imageRes = await customAxios.post("/api/upload", formData, {
+      const imageRes = await customAxios.post("/api/nest/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const image_URL: string = imageRes.data.imageURL;

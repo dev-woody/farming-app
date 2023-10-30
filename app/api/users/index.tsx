@@ -8,7 +8,7 @@ export interface User {
 }
 
 export async function getUsers() {
-  return accessAxios.get(`/api/users`).then((res) => res.data);
+  return accessAxios.get(`/api/nest/users`).then((res) => res.data);
 }
 
 export async function signIn(payload: { user_id: string; password: string }) {

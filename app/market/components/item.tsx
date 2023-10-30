@@ -17,7 +17,7 @@ export default function ItemBox({ productInfo }: ItemProps) {
         <div className="h-full rounded-lg overflow-hidden">
           <img
             className="lg:h-48 md:h-36 w-full object-cover object-center"
-            src={`/api${productInfo.thumbnail}`}
+            src={`/api/nest${productInfo.thumbnail}`}
             alt="blog"
           />
           <div className="p-2">

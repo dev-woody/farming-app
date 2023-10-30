@@ -1,6 +1,6 @@
 "use client";
 
-import { customAxios } from "@/app/api/createAPI";
+import { accessAxios, customAxios } from "@/app/api/createAPI";
 import StyleTab from "@/app/components/styles/tabs";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
@@ -9,6 +9,7 @@ import {
   PlusSmallIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
@@ -17,7 +18,6 @@ interface IOption {
   id: number;
   name: string;
   sale_price: number;
-  count: number;
 }
 
 interface IOptionItem extends IOption {
@@ -30,6 +30,7 @@ export default function Product({ params }: { params: { id: string } }) {
   const [price, setPrice] = useState<number>(0);
   const [selected, setSelected] = useState({ name: "옵션을 선택해주세요." });
   const newOptionItem = [...optionItem];
+  const { data: session } = useSession();
 
   const totalReviw = productItem?.reviews.length;
   const reviewEval =
@@ -38,7 +39,6 @@ export default function Product({ params }: { params: { id: string } }) {
       .reduce((a: any, c: any) => a + c, 0) / totalReviw || 0;
 
   const handleOption = (e: IOption) => {
-    console.log(newOptionItem);
     if (newOptionItem.some((option: IOptionItem) => option.id === e.id)) {
       newOptionItem.forEach((option: IOptionItem) => {
         if (option.id === e.id) {
@@ -100,9 +100,28 @@ export default function Product({ params }: { params: { id: string } }) {
     );
   }
 
+  function onAddCart() {
+    if (session && session.user) {
+      customAxios.post(
+        `/api/nest/cart/create`,
+        {
+          user_id: session.user.uuid,
+          prod_id: productItem.id,
+          option: optionItem,
+          status: "ready",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${session.user.accessToken}`,
+          },
+        },
+      );
+    }
+  }
+
   useEffect(() => {
     (async () => {
-      customAxios.get(`/api/products/${params.id}`).then((res) => {
+      customAxios.get(`/api/nest/products/${params.id}`).then((res) => {
         setProductItem(res.data);
       });
     })();
@@ -117,7 +136,7 @@ export default function Product({ params }: { params: { id: string } }) {
             height={500}
             alt="ecommerce"
             className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
-            src={`/api${productItem?.thumbnail}`}
+            src={`/api/nest${productItem?.thumbnail}`}
           />
           <div className="flex flex-col justify-between lg:w-1/2 w-full lg:pl-10 lg:py-2 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest ">
@@ -264,7 +283,10 @@ export default function Product({ params }: { params: { id: string } }) {
                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
                   </svg>
                 </button>
-                <button className="flex-grow ml-4 text-gray-500 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-teal-600 hover:text-white rounded">
+                <button
+                  onClick={onAddCart}
+                  className="flex-grow ml-4 text-gray-500 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-teal-600 hover:text-white rounded"
+                >
                   장바구니
                 </button>
                 <Link

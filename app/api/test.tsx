@@ -10,7 +10,6 @@ export default async function test(req: NextApiRequest, res: NextApiResponse) {
   //         res.json(result)
   //     }
   // })
-  console.log(await (await fetch(`http://localhost:8080/products`)).json());
 }
 
 // export default function test(req: NextApiRequest, res: NextApiResponse) {

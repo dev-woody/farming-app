@@ -9,7 +9,9 @@ export default function Market() {
 
   useEffect(() => {
     (async () => {
-      customAxios.get(`/api/products`).then((res) => setProductList(res.data));
+      customAxios
+        .get(`/api/nest/products`)
+        .then((res) => setProductList(res.data));
     })();
   }, []);
 

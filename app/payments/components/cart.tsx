@@ -1,14 +1,16 @@
-import { accessAxios } from "@/app/api/createAPI";
+import { accessAxios, customAxios } from "@/app/api/createAPI";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function CartModule() {
   const [cart, setCart] = useState({});
+  const { data: session } = useSession();
 
   useEffect(() => {
     (async () => {
-      const res = await accessAxios
-        .get("/api/users")
+      const res = await customAxios
+        .get("/api/nest/carts")
         .then((res) => setCart(res.data.cart));
     })();
   }, []);
