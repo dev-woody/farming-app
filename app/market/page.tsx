@@ -33,7 +33,7 @@ export default function Market() {
         </div>
         <div className="flex flex-wrap -m-4">
           {productList?.map((product: any) => (
-            <ItemBox key={product.id} productInfo={product} />
+            <ItemBox key={product.uuid} productInfo={product} />
           ))}
         </div>
       </div>

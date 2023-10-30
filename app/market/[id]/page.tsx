@@ -135,7 +135,9 @@ export default function Product({ params }: { params: { id: string } }) {
           <Image
             width={500}
             height={500}
-            alt="ecommerce"
+            placeholder="blur"
+            alt="productImg"
+            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89x8AAsEB3+IGkhwAAAAASUVORK5CYII=" // 추가
             className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
             src={`/api/nest${productItem?.thumbnail}`}
           />

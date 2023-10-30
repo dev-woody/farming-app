@@ -13,7 +13,7 @@ export default function ItemBox({ productInfo }: ItemProps) {
       .reduce((a: any, c: any) => a + c, 0) / totalReviw || 0;
   return (
     <div className="p-4 md:w-1/3 w-full">
-      <Link href={`/market/${productInfo.id}`}>
+      <Link href={`/market/${productInfo.uuid}`}>
         <div className="h-full rounded-lg overflow-hidden">
           <img
             className="lg:h-48 md:h-36 w-full object-cover object-center"
