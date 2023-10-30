@@ -21,7 +21,7 @@ interface IOption {
 }
 
 interface IOptionItem extends IOption {
-  count: number;
+  quantity: number;
 }
 
 export default function Product({ params }: { params: { id: string } }) {
@@ -42,18 +42,19 @@ export default function Product({ params }: { params: { id: string } }) {
     if (newOptionItem.some((option: IOptionItem) => option.id === e.id)) {
       newOptionItem.forEach((option: IOptionItem) => {
         if (option.id === e.id) {
-          option.count += 1;
+          option.quantity += 1;
         }
       });
       setOptionItem(newOptionItem);
       setPrice(
         newOptionItem
-          .map((item: IOptionItem) => item.sale_price * item.count)
+          .map((item: IOptionItem) => item.sale_price * item.quantity)
           .reduce((a: number, c: number) => a + c, 0),
       );
+      console.log(e);
       return;
     }
-    newOptionItem.push({ ...e, count: 1 });
+    newOptionItem.push({ ...e, quantity: 1 });
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
@@ -65,13 +66,13 @@ export default function Product({ params }: { params: { id: string } }) {
   function addCount(e: IOptionItem) {
     newOptionItem.forEach((option: IOptionItem) => {
       if (option.id === e.id) {
-        option.count += 1;
+        option.quantity += 1;
       }
     });
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
-        .map((item: IOptionItem) => item.sale_price * item.count)
+        .map((item: IOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -79,13 +80,13 @@ export default function Product({ params }: { params: { id: string } }) {
   function minusCount(e: IOptionItem) {
     newOptionItem.forEach((option: IOptionItem) => {
       if (option.id === e.id) {
-        option.count -= 1;
+        option.quantity -= 1;
       }
     });
-    setOptionItem(newOptionItem.filter((item) => item.count > 0));
+    setOptionItem(newOptionItem.filter((item) => item.quantity > 0));
     setPrice(
       newOptionItem
-        .map((item: IOptionItem) => item.sale_price * item.count)
+        .map((item: IOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -95,7 +96,7 @@ export default function Product({ params }: { params: { id: string } }) {
     setPrice(
       newOptionItem
         .filter((item) => item.id !== e.id)
-        .map((item: IOptionItem) => item.sale_price * item.count)
+        .map((item: IOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -107,7 +108,7 @@ export default function Product({ params }: { params: { id: string } }) {
         {
           user_id: session.user.uuid,
           prod_id: productItem.id,
-          option: optionItem,
+          options: optionItem,
           status: "ready",
         },
         {
@@ -240,7 +241,7 @@ export default function Product({ params }: { params: { id: string } }) {
                             aria-hidden="true"
                           />
                         </button>
-                        <span className="">{item.count}</span>
+                        <span className="">{item.quantity}</span>
                         <button
                           className="flex items-center bg-gray-200 rounded-md"
                           type="button"
