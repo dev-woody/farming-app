@@ -14,21 +14,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 
-interface IOption {
-  id: number;
-  name: string;
+interface Option_Item {
+  uuid: string;
+  opt_value: string;
+  price: number;
   sale_price: number;
 }
 
-interface IOptionItem extends IOption {
+interface IOption {
+  uuid: string;
+  opt_name: string;
+  option_items: Option_Item[];
+}
+
+interface QuanOptionItem extends Option_Item {
   quantity: number;
+}
+
+interface PropsSelectOption {
+  selected: { opt_value: string };
+  handleOption: (options: IOption, e: Option_Item) => void;
+  options: IOption;
 }
 
 export default function Product({ params }: { params: { id: string } }) {
   const [productItem, setProductItem] = useState<any>();
-  const [optionItem, setOptionItem] = useState<IOptionItem[]>([]);
+  const [optionItem, setOptionItem] = useState<QuanOptionItem[]>([]);
   const [price, setPrice] = useState<number>(0);
-  const [selected, setSelected] = useState({ name: "옵션을 선택해주세요." });
+  const [optSelected, setOptSelected] = useState<IOption>();
+  const [selected, setSelected] = useState({
+    opt_value: "옵션을 선택해주세요.",
+  });
   const newOptionItem = [...optionItem];
   const { data: session } = useSession();
 
@@ -38,17 +54,20 @@ export default function Product({ params }: { params: { id: string } }) {
       .map((item: any) => item.rating)
       .reduce((a: any, c: any) => a + c, 0) / totalReviw || 0;
 
-  const handleOption = (e: IOption) => {
-    if (newOptionItem.some((option: IOptionItem) => option.id === e.id)) {
-      newOptionItem.forEach((option: IOptionItem) => {
-        if (option.id === e.id) {
+  const handleOption = (options: IOption, e: Option_Item) => {
+    setOptSelected(options);
+    if (
+      newOptionItem.some((option: QuanOptionItem) => option.uuid === e.uuid)
+    ) {
+      newOptionItem.forEach((option: QuanOptionItem) => {
+        if (option.uuid === e.uuid) {
           option.quantity += 1;
         }
       });
       setOptionItem(newOptionItem);
       setPrice(
         newOptionItem
-          .map((item: IOptionItem) => item.sale_price * item.quantity)
+          .map((item: QuanOptionItem) => item.sale_price * item.quantity)
           .reduce((a: number, c: number) => a + c, 0),
       );
       console.log(e);
@@ -58,45 +77,45 @@ export default function Product({ params }: { params: { id: string } }) {
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
-        .map((item: IOptionItem) => item.sale_price)
+        .map((item: QuanOptionItem) => item.sale_price)
         .reduce((a: number, c: number) => a + c, 0),
     );
   };
 
-  function addCount(e: IOptionItem) {
-    newOptionItem.forEach((option: IOptionItem) => {
-      if (option.id === e.id) {
+  function addCount(e: QuanOptionItem) {
+    newOptionItem.forEach((option: QuanOptionItem) => {
+      if (option.uuid === e.uuid) {
         option.quantity += 1;
       }
     });
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
-        .map((item: IOptionItem) => item.sale_price * item.quantity)
+        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
 
-  function minusCount(e: IOptionItem) {
-    newOptionItem.forEach((option: IOptionItem) => {
-      if (option.id === e.id) {
+  function minusCount(e: QuanOptionItem) {
+    newOptionItem.forEach((option: QuanOptionItem) => {
+      if (option.uuid === e.uuid) {
         option.quantity -= 1;
       }
     });
     setOptionItem(newOptionItem.filter((item) => item.quantity > 0));
     setPrice(
       newOptionItem
-        .map((item: IOptionItem) => item.sale_price * item.quantity)
+        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
 
-  function deleteOption(e: IOptionItem) {
-    setOptionItem(newOptionItem.filter((item) => item.id !== e.id));
+  function deleteOption(e: QuanOptionItem) {
+    setOptionItem(newOptionItem.filter((item) => item.uuid !== e.uuid));
     setPrice(
       newOptionItem
-        .filter((item) => item.id !== e.id)
-        .map((item: IOptionItem) => item.sale_price * item.quantity)
+        .filter((item) => item.uuid !== e.uuid)
+        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -107,9 +126,14 @@ export default function Product({ params }: { params: { id: string } }) {
         `/api/nest/cart/create`,
         {
           user_id: session.user.uuid,
-          prod_id: productItem.id,
-          options: optionItem,
-          status: "ready",
+          prod_id: productItem.uuid,
+          options: [
+            {
+              uuid: optSelected?.uuid,
+              opt_name: optSelected?.opt_name,
+              option_items: optionItem,
+            },
+          ],
         },
         {
           headers: {
@@ -168,67 +192,25 @@ export default function Product({ params }: { params: { id: string } }) {
               </span>
             </div>
             <div className="glow">
-              {/* <p className="leading-relaxed">{productItem?.description}</p> */}
+              <p className="leading-relaxed">{productItem?.description}</p>
             </div>
-            <div className="flex glow mt-6 items-center mb-5">
-              <div className="glow w-full">
-                <Listbox value={selected} onChange={handleOption}>
-                  <div className="relative mt-1">
-                    <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                      <span className="block truncate">{selected.name}</span>
-                      <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                        <ChevronUpDownIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </Listbox.Button>
-                    <Transition
-                      as={Fragment}
-                      leave="transition ease-in duration-100"
-                      leaveFrom="opacity-100"
-                      leaveTo="opacity-0"
-                    >
-                      <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {productItem?.options.map(
-                          (item: any, itemIdx: number) => (
-                            <Listbox.Option
-                              key={itemIdx}
-                              className={({ active }) =>
-                                `relative cursor-default select-none py-2 px-4 ${
-                                  active
-                                    ? "bg-teal-100 text-teal-900"
-                                    : "text-gray-900"
-                                }`
-                              }
-                              value={item}
-                            >
-                              <p className="flex justify-between">
-                                <span className="block truncate font-normal text-gray-600">
-                                  {item.name}
-                                </span>
-                                <span className="block truncate font-semibold text-teal-700">
-                                  {item.sale_price} 원
-                                </span>
-                              </p>
-                            </Listbox.Option>
-                          ),
-                        )}
-                      </Listbox.Options>
-                    </Transition>
-                  </div>
-                </Listbox>
-              </div>
-            </div>
+            {productItem?.options.map((item: IOption, idx: number) => (
+              <SelectOption
+                key={idx}
+                selected={selected}
+                handleOption={handleOption}
+                options={item}
+              />
+            ))}
             <div>
               {optionItem?.length > 0 &&
-                optionItem.map((item: IOptionItem, idx: number) => (
+                optionItem.map((item: QuanOptionItem, idx: number) => (
                   <div
                     key={idx}
                     className="flex w-full justify-between cursor-default bg-white py-2 px-2 text-left  sm:text-sm"
                   >
                     <div className="flex flex-grow justify-between">
-                      <span>{item.name}</span>
+                      <span>{item.opt_value}</span>
                       <span className="font-semibold">{item.sale_price}원</span>
                     </div>
                     <div className="flex md:w-1/3 justify-between ml-4">
@@ -305,5 +287,62 @@ export default function Product({ params }: { params: { id: string } }) {
         <StyleTab tabList={["상세정보", "상품평", "설명"]} />
       </div>
     </section>
+  );
+}
+
+function SelectOption({ selected, handleOption, options }: PropsSelectOption) {
+  return (
+    <div className="flex glow mt-6 items-center mb-5">
+      <div className="glow w-full">
+        {/* <h1 className="px-2 py-2 font-semibold">{options.opt_name}</h1> */}
+        <Listbox
+          value={selected}
+          onChange={(e: Option_Item) => handleOption(options, e)}
+        >
+          <div className="relative mt-1">
+            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+              <span className="block truncate">{selected.opt_value}</span>
+              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronUpDownIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              </span>
+            </Listbox.Button>
+            <Transition
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                {options?.option_items.map(
+                  (item: Option_Item, itemIdx: number) => (
+                    <Listbox.Option
+                      key={itemIdx}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 px-4 ${
+                          active ? "bg-teal-100 text-teal-900" : "text-gray-900"
+                        }`
+                      }
+                      value={item}
+                    >
+                      <p className="flex justify-between">
+                        <span className="block truncate font-normal text-gray-600">
+                          {item.opt_value}
+                        </span>
+                        <span className="block truncate font-semibold text-teal-700">
+                          {item.sale_price} 원
+                        </span>
+                      </p>
+                    </Listbox.Option>
+                  ),
+                )}
+              </Listbox.Options>
+            </Transition>
+          </div>
+        </Listbox>
+      </div>
+    </div>
   );
 }
