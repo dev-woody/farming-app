@@ -127,6 +127,8 @@ export default function Product({ params }: { params: { id: string } }) {
         {
           user_id: session.user.uuid,
           prod_id: productItem.uuid,
+          prod_img: productItem.thumbnail,
+          prod_name: productItem.prod_name,
           options: [
             {
               uuid: optSelected?.uuid,
