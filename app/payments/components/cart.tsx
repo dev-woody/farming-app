@@ -1,5 +1,9 @@
 import { accessAxios, customAxios } from "@/app/api/createAPI";
-import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
+import {
+  MinusSmallIcon,
+  PlusSmallIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -98,7 +102,7 @@ export default function CartModule() {
           </div>
           <Link
             href="/payments"
-            className="mt-6 w-full text-center rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+            className="mt-6 w-full text-center rounded-md bg-teal-500 py-1.5 font-medium text-blue-50 hover:bg-teal-600"
             // onClick={() => { localStorage.setItem("order", ) }}}
           >
             주문하기
@@ -123,32 +127,43 @@ function CartItem({ cartItem }: { cartItem: ICart }) {
         />
         <div className="sm:ml-4 sm:flex sm:w-full sm:justify-between">
           <div className="mt-5 sm:mt-0">
-            <h2 className="text-lg font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900">
               {cartItem.prod_name}
             </h2>
-            <p className="mt-1 text-xs text-gray-700">{cartItem.opt_name}</p>
+            <p className="mt-1 text-lg text-gray-700">{option.opt_value}</p>
           </div>
           <div className="mt-4 flex flex-col justify-between items-end sm:space-y-6 sm:mt-0">
-            <div className="flex justify-between">
-              <span className="cursor-pointer rounded-l bg-gray-100 py-1 px-3.5 duration-100 hover:bg-blue-500 hover:text-blue-50">
-                <MinusSmallIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </span>
-              <span className="h-8 w-8 border bg-white text-center text-xs outline-none">
-                {option.quantity}
-              </span>
-              <span className="cursor-pointer rounded-r bg-gray-100 py-1 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
-                <PlusSmallIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </span>
+            <div className="flex w-full justify-between ml-4">
+              <div className="flex w-full justify-between">
+                <button
+                  className="flex items-center bg-gray-200 rounded-md"
+                  type="button"
+                  // onClick={() => minusCount(item)}
+                >
+                  <MinusSmallIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </button>
+                <span className="">{option.quantity}</span>
+                <button
+                  className="flex items-center bg-gray-200 rounded-md"
+                  type="button"
+                  // onClick={() => addCount(item)}
+                >
+                  <PlusSmallIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
             </div>
             <div className="flex items-center ">
-              <p className="text-sm">
-                {(option.sale_price || option.price) * option.quantity + " 원"}
+              <p className="text-lg mr-2">
+                <span className="text-xl font-semibold mr-2">
+                  {(option.sale_price || option.price) * option.quantity}
+                </span>
+                원
               </p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

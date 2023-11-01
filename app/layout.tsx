@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
@@ -7,8 +8,15 @@ import SProviders from "./components/sessionProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "Farmen",
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Farmen",
+    default: "Farmen", // a default is required when creating a template
+  },
+  description: "원하는 농산물을 저렴하게 파먼에서!",
+  applicationName: "Farmen",
+  viewport: "width=device-width, initial-scale=1.0",
+
   openGraph: {
     title: "Farmen",
     description: "원하는 농산물을 저렴하게 파먼에서!",
@@ -25,11 +33,6 @@ export const metadata = {
     type: "website",
   },
 };
-
-// export const metadata: Metadata = {
-//   title: "Home",
-//   description: "Welcome to Next.js",
-// };
 
 export default function RootLayout({
   children,

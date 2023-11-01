@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Seo from "../components/seo";
+import Seo from "../components/layout/seo";
 import AddressForm from "./components/addressForm";
 import StSelect from "../components/styles/selected";
 import TossPay from "./components/toss";

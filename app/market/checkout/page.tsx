@@ -1,4 +1,4 @@
-import Seo from "@/app/components/seo";
+import Seo from "@/app/components/layout/seo";
 import TossPay from "@/app/payments/components/toss";
 import UserAddress from "@/app/payments/components/addressForm";
 

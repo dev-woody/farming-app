@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import SList from "../components/layout/list";
 import { useSession, signOut } from "next-auth/react";
 
 export default function Home() {
@@ -19,7 +18,7 @@ export default function Home() {
             <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-white-700">
               <img
                 className="h-full w-full rounded-full"
-                src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/avatar11.1060b63041fdffa5f8ef.png"
+                src={`/api/nest${session?.user?.profile_img}`}
                 alt=""
               />
             </div>
@@ -47,8 +46,8 @@ export default function Home() {
             </div>
           </div>
           <div></div>
-          <div className="flex w-full my-4 flex-wrap">
-            <h1 className="sm:text-2xl text-xl font-medium title-font text-gray-900 lg:mb-0 mb-4">
+          <div className="flex w-full my-2 flex-wrap">
+            <h1 className="sm:text-2xl text-xl font-medium title-font text-gray-900 lg:mb-2 mb-4">
               주문조회
             </h1>
             <Link
@@ -59,7 +58,8 @@ export default function Home() {
               주문조회
             </Link>
           </div>
-          <div className="mx-auto w-full">
+          <span className="w-full h-[1px] bg-gray-200"></span>
+          <div className="mx-auto my-2 w-full">
             <div className="flex flex-col w-full bg-white rounded-lg text-gray-900 text-sm font-medium">
               <a
                 href="#"
