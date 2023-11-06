@@ -39,14 +39,13 @@ export default function CartModule() {
   useEffect(() => {
     (async () => {
       await customAxios
-        .get("/api/nest/cart", {
+        .get("/api/nest/users/cart", {
           headers: { Authorization: `Bearer ${session!.user.accessToken}` },
         })
         .then((res) => setCart(res.data));
     })();
   }, [session]);
 
-  console.log(cart);
   //   <script>
   //     document.addEventListener("alpine:init", () => {
   //         Alpine.data("app", () => ({
