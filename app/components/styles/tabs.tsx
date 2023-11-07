@@ -40,8 +40,22 @@ export default function StyleTab({ children, tabList }: ITab) {
           >
             Content 1
           </Tab.Panel>
-          <Tab.Panel>Content 2</Tab.Panel>
-          <Tab.Panel>Content 3</Tab.Panel>
+          <Tab.Panel
+            className={classNames(
+              "rounded-xl bg-white p-3",
+              // "ring-white ring-opacity-60 ring-offset-2 ring-offset-teal-400 focus:outline-none focus:ring-2",
+            )}
+          >
+            Content 2
+          </Tab.Panel>
+          <Tab.Panel
+            className={classNames(
+              "rounded-xl bg-white p-3",
+              // "ring-white ring-opacity-60 ring-offset-2 ring-offset-teal-400 focus:outline-none focus:ring-2",
+            )}
+          >
+            Content 3
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </div>

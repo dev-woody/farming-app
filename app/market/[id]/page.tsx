@@ -17,8 +17,7 @@ import { Fragment, useEffect, useState } from "react";
 interface Option_Item {
   uuid: string;
   opt_value: string;
-  price: number;
-  sale_price: number;
+  opt_price: number;
 }
 
 interface IOption {
@@ -48,6 +47,12 @@ export default function Product({ params }: { params: { id: string } }) {
   const newOptionItem = [...optionItem];
   const { data: session } = useSession();
 
+  const default_price = productItem?.options[0]?.option_items[0].opt_price;
+
+  function saleRate(price: number) {
+    return price - price * (productItem?.sale_rate / 100);
+  }
+
   const totalReviw = productItem?.reviews.length;
   const reviewEval =
     productItem?.reviews
@@ -67,7 +72,7 @@ export default function Product({ params }: { params: { id: string } }) {
       setOptionItem(newOptionItem);
       setPrice(
         newOptionItem
-          .map((item: QuanOptionItem) => item.sale_price * item.quantity)
+          .map((item: QuanOptionItem) => item.opt_price * item.quantity)
           .reduce((a: number, c: number) => a + c, 0),
       );
       console.log(e);
@@ -77,7 +82,7 @@ export default function Product({ params }: { params: { id: string } }) {
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
-        .map((item: QuanOptionItem) => item.sale_price)
+        .map((item: QuanOptionItem) => item.opt_price)
         .reduce((a: number, c: number) => a + c, 0),
     );
   };
@@ -91,7 +96,7 @@ export default function Product({ params }: { params: { id: string } }) {
     setOptionItem(newOptionItem);
     setPrice(
       newOptionItem
-        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
+        .map((item: QuanOptionItem) => item.opt_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -105,7 +110,7 @@ export default function Product({ params }: { params: { id: string } }) {
     setOptionItem(newOptionItem.filter((item) => item.quantity > 0));
     setPrice(
       newOptionItem
-        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
+        .map((item: QuanOptionItem) => item.opt_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -115,7 +120,7 @@ export default function Product({ params }: { params: { id: string } }) {
     setPrice(
       newOptionItem
         .filter((item) => item.uuid !== e.uuid)
-        .map((item: QuanOptionItem) => item.sale_price * item.quantity)
+        .map((item: QuanOptionItem) => item.opt_price * item.quantity)
         .reduce((a: number, c: number) => a + c, 0),
     );
   }
@@ -125,15 +130,12 @@ export default function Product({ params }: { params: { id: string } }) {
       customAxios.post(
         `/api/nest/cart/create`,
         {
-          user_id: session.user.uuid,
-          prod_id: productItem.uuid,
-          prod_img: productItem.thumbnail,
-          prod_name: productItem.prod_name,
-          options: [
+          user: session.user.uuid,
+          product: productItem.uuid,
+          items: [
             {
               uuid: optSelected?.uuid,
-              opt_name: optSelected?.opt_name,
-              option_items: optionItem,
+              options: optionItem,
             },
           ],
         },
@@ -154,27 +156,92 @@ export default function Product({ params }: { params: { id: string } }) {
     })();
   }, [params.id]);
 
+  function SelectOption({
+    selected,
+    handleOption,
+    options,
+  }: PropsSelectOption) {
+    return (
+      <div className="flex glow mt-6 items-center mb-5">
+        <div className="glow w-full">
+          {/* <h1 className="px-2 py-2 font-semibold">{options.opt_name}</h1> */}
+          <Listbox
+            value={selected}
+            onChange={(e: Option_Item) => handleOption(options, e)}
+          >
+            <div className="relative mt-1">
+              <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                <span className="block truncate">{selected.opt_value}</span>
+                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                  <ChevronUpDownIcon
+                    className="h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                </span>
+              </Listbox.Button>
+              <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {options?.option_items.map(
+                    (item: Option_Item, itemIdx: number) => (
+                      <Listbox.Option
+                        key={itemIdx}
+                        className={({ active }) =>
+                          `relative cursor-default select-none py-2 px-4 ${
+                            active
+                              ? "bg-teal-100 text-teal-900"
+                              : "text-gray-900"
+                          }`
+                        }
+                        value={item}
+                      >
+                        <p className="flex justify-between">
+                          <span className="block truncate font-normal text-gray-600">
+                            {item.opt_value}
+                          </span>
+                          <span className="block truncate font-semibold text-teal-700">
+                            {saleRate(item.opt_price)}원
+                          </span>
+                        </p>
+                      </Listbox.Option>
+                    ),
+                  )}
+                </Listbox.Options>
+              </Transition>
+            </div>
+          </Listbox>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section className="text-gray-600 body-font overflow-hidden">
       <div className="container px-5 md:py-12 py-2 mx-auto">
         <div className="mx-auto flex flex-wrap">
-          <Image
-            width={500}
-            height={500}
-            placeholder="blur"
-            alt="productImg"
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89x8AAsEB3+IGkhwAAAAASUVORK5CYII=" // 추가
-            className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
-            src={`/api/nest${productItem?.thumbnail}`}
-          />
+          <div className="lg:w-1/2 w-full lg:h-auto h-64">
+            <Image
+              width={492}
+              height={32}
+              placeholder="blur"
+              alt="productImg"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89x8AAsEB3+IGkhwAAAAASUVORK5CYII=" // 추가
+              className="w-full lg:h-[332px] h-64 object-cover object-center rounded"
+              src={`/api/nest${productItem?.thumbnail}`}
+            />
+          </div>
           <div className="flex flex-col justify-between lg:w-1/2 w-full lg:pl-10 lg:py-2 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 tracking-widest ">
               {productItem?.category}
             </h2>
             <h1 className="text-gray-900 text-3xl font-bold title-font my-1">
-              {productItem?.prd_name}
+              {productItem?.prod_name}
             </h1>
-            <div className="flex mb-4">
+            <div className="flex mb-2">
               <span className="flex items-center">
                 <svg
                   fill="currentColor"
@@ -193,6 +260,15 @@ export default function Product({ params }: { params: { id: string } }) {
                 </span>
               </span>
             </div>
+            <h1 className="text-2xl text-red-500 inline-flex items-center mb-2">
+              <span className="text-gray-400 line-through mr-4">
+                {default_price}
+              </span>
+              <span className="font-semibold">
+                {saleRate(default_price)}
+                &nbsp;₩
+              </span>
+            </h1>
             <div className="glow">
               <p className="leading-relaxed">{productItem?.description}</p>
             </div>
@@ -213,7 +289,9 @@ export default function Product({ params }: { params: { id: string } }) {
                   >
                     <div className="flex flex-grow justify-between">
                       <span>{item.opt_value}</span>
-                      <span className="font-semibold">{item.sale_price}원</span>
+                      <span className="font-semibold">
+                        {saleRate(item.opt_price)}원
+                      </span>
                     </div>
                     <div className="flex md:w-1/3 justify-between ml-4">
                       <div className="flex md:w-3/4 justify-between">
@@ -255,7 +333,7 @@ export default function Product({ params }: { params: { id: string } }) {
             </div>
             <div className="flex flex-col pt-5 border-t-2 border-gray-100">
               <span className="title-font text-right font-medium text-2xl text-gray-900 md:mb-4">
-                {price} 원
+                {saleRate(price)} 원
               </span>
               <div className="flex">
                 <button className="rounded-full w-10 h-10 bg-gray-200 hover:bg-red-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 hover:text-red-800">
@@ -289,62 +367,5 @@ export default function Product({ params }: { params: { id: string } }) {
         <StyleTab tabList={["상세정보", "상품평", "설명"]} />
       </div>
     </section>
-  );
-}
-
-function SelectOption({ selected, handleOption, options }: PropsSelectOption) {
-  return (
-    <div className="flex glow mt-6 items-center mb-5">
-      <div className="glow w-full">
-        {/* <h1 className="px-2 py-2 font-semibold">{options.opt_name}</h1> */}
-        <Listbox
-          value={selected}
-          onChange={(e: Option_Item) => handleOption(options, e)}
-        >
-          <div className="relative mt-1">
-            <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-              <span className="block truncate">{selected.opt_value}</span>
-              <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                <ChevronUpDownIcon
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                />
-              </span>
-            </Listbox.Button>
-            <Transition
-              as={Fragment}
-              leave="transition ease-in duration-100"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {options?.option_items.map(
-                  (item: Option_Item, itemIdx: number) => (
-                    <Listbox.Option
-                      key={itemIdx}
-                      className={({ active }) =>
-                        `relative cursor-default select-none py-2 px-4 ${
-                          active ? "bg-teal-100 text-teal-900" : "text-gray-900"
-                        }`
-                      }
-                      value={item}
-                    >
-                      <p className="flex justify-between">
-                        <span className="block truncate font-normal text-gray-600">
-                          {item.opt_value}
-                        </span>
-                        <span className="block truncate font-semibold text-teal-700">
-                          {item.sale_price} 원
-                        </span>
-                      </p>
-                    </Listbox.Option>
-                  ),
-                )}
-              </Listbox.Options>
-            </Transition>
-          </div>
-        </Listbox>
-      </div>
-    </div>
   );
 }

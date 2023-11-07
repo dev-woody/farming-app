@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ItemBox from "./components/item";
 import { customAxios } from "../api/createAPI";
+import Image from "next/image";
 
 export default function Market() {
   const [productList, setProductList] = useState<any[]>([]);
@@ -19,11 +20,15 @@ export default function Market() {
     <section className="text-gray-600 body-font">
       <div className="container px-5 md:py-12 py-2 mx-auto">
         <div className="rounded-lg h-64 mb-10 overflow-hidden">
-          <img
+          {/* <div className="object-cover object-center h-full w-full"> */}
+          <Image
+            src="https://dummyimage.com/1200x500"
+            width={100}
+            height={100}
             alt="market-banner"
             className="object-cover object-center h-full w-full"
-            src="https://dummyimage.com/1200x500"
           />
+          {/* </div> */}
         </div>
         <div className="flex w-full my-2 flex-wrap">
           <h1 className="sm:text-2xl text-xl font-medium title-font text-gray-900 lg:w-1/3 lg:mb-0 mb-4">
