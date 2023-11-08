@@ -21,6 +21,7 @@ interface ICartItems {
   uuid: string;
   opt_name: string;
   product: any;
+  total_amount: number;
   cart_item_opts: ICartItemOption[];
 }
 
@@ -38,6 +39,10 @@ export default function CartModule() {
   function saleRate(price: number, sale_rate: number) {
     return price - price * (sale_rate / 100);
   }
+
+  const cart_total_amount = cart.cart_items.reduce((total, item) => {
+    return total + item.total_amount;
+  }, 0);
 
   const { data: session } = useSession();
 
@@ -164,6 +169,12 @@ export default function CartModule() {
             )}
           </div>
         </div>
+        <div className="text-right">
+          <span className="text-xl font-semibold">합계</span>
+          <span className="block text-2xl  font-bold">
+            {cartItem.total_amount}&nbsp;원
+          </span>
+        </div>
       </div>
     );
   }
@@ -206,7 +217,7 @@ export default function CartModule() {
             <div className="mb-6 justify-between h-full rounded-lg bg-white p-6 shadow-md sm:flex sm:flex-col sm:justify-start">
               <div className="mb-2 flex justify-between">
                 <p className="text-gray-700">주문금액</p>
-                <p className="text-gray-700">$129.99</p>
+                <p className="text-gray-700">{cart_total_amount}&nbsp;원</p>
               </div>
               <div className="flex justify-between">
                 <p className="text-gray-700">배송비</p>
