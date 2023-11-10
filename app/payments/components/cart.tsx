@@ -47,17 +47,17 @@ export default function CartModule() {
   const { data: session } = useSession();
 
   useEffect(() => {
-    const sessionUser = session?.user.accessToken;
-    if (typeof sessionUser === "string") {
-      (async () => {
-        await customAxios
-          .get("/api/nest/cart", {
-            headers: { Authorization: `Bearer ${sessionUser}` },
-          })
-          .then((res) => setCart(res.data));
-      })();
-    }
-  }, [session]);
+    // const sessionUser = session?.user.accessToken;
+    // if (typeof sessionUser === "string") {
+    (async () => {
+      await customAxios
+        .get("/api/nest/cart", {
+          // headers: { Authorization: `Bearer ${sessionUser}` },
+        })
+        .then((res) => setCart(res.data));
+    })();
+    // }
+  }, []);
 
   //   <script>
   //     document.addEventListener("alpine:init", () => {

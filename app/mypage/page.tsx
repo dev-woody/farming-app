@@ -82,7 +82,9 @@ export default function Home() {
               </a>
               <button
                 type="button"
-                onClick={() => signOut()}
+                onClick={() => {
+                  signOut();
+                }}
                 className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"
               >
                 로그아웃

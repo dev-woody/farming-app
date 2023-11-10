@@ -1,7 +1,9 @@
-import axios from "axios";
-import Cookies from "js-cookie";
+// "use client"
 
-const access_token = JSON.parse(Cookies.get("access_token") || "null");
+import axios from "axios";
+import {cookies } from 'next/headers'
+
+// const access_token = cookies().get('ACCESS_TOKEN');
 
 export const customAxios = axios.create({
   headers: {
@@ -13,7 +15,7 @@ export const customAxios = axios.create({
 export const accessAxios = axios.create({
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${access_token}`,
+    // "Authorization": `Bearer ${access_token}`,
     validateStatus: false,
   },
 });

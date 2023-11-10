@@ -11,6 +11,8 @@ export async function getUsers() {
   return accessAxios.get(`/api/nest/users`).then((res) => res.data);
 }
 
-export async function signIn(payload: { user_id: string; password: string }) {
-  return customAxios.post(`/api/signIn`, payload).then((res) => res.data);
+export async function signIn(user_id: string, password: string) {
+  return customAxios
+    .post(`/api/nest/signIn`, { user_id, password })
+    .then((res) => res.data);
 }

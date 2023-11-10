@@ -44,13 +44,13 @@ export default function RootLayout({
       <body
         className={inter.className + " flex flex-col min-w-screen min-h-screen"}
       >
-        <SProviders>
-          <Providers>
-            <Header />
-            <div className="grow">{children}</div>
-            <Footer />
-          </Providers>
-        </SProviders>
+        {/* <SProviders> */}
+        <Providers>
+          <Header />
+          <div className="grow">{children}</div>
+          <Footer />
+        </Providers>
+        {/* </SProviders> */}
       </body>
     </html>
   );
