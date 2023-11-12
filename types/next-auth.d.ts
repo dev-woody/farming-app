@@ -7,7 +7,7 @@ declare module "next-auth" {
       user_id: string;
       profile_img: string;
       name: string;
-      zip_code: string;
+      zip_code: number;
       address: string;
       address_detail: string;
       phone: string;

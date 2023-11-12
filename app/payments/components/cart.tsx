@@ -1,9 +1,5 @@
-import { accessAxios, customAxios } from "@/app/api/createAPI";
-import {
-  MinusSmallIcon,
-  PlusSmallIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { customAxios } from "@/app/api/createAPI";
+import { MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,8 +39,6 @@ export default function CartModule() {
   const cart_total_amount = cart.cart_items.reduce((total, item) => {
     return total + item.total_amount;
   }, 0);
-
-  const { data: session } = useSession();
 
   useEffect(() => {
     // const sessionUser = session?.user.accessToken;

@@ -6,9 +6,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/app/api/users";
+// import { signIn } from "@/app/api/users";
 import Cookies from "js-cookie";
-// import { signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 interface SubmitForm {
   user_id: string;
@@ -55,26 +55,26 @@ export default function SignIn() {
         <form
           onSubmit={handleSubmit(
             async (data) => {
-              const { user_id, password } = data;
-              await fetch(`/api/nest/signIn`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  user_id,
-                  password,
-                }),
-              });
-              // signIn("credentials", {
-              //   user_id: data.user_id,
-              //   password: data.password,
-              //   redirect: true,
-              //   callbackUrl: "/",
+              // const { user_id, password } = data;
+              // await fetch(`/api/nest/signIn`, {
+              //   method: "POST",
+              //   headers: {
+              //     "Content-Type": "application/json",
+              //   },
+              //   body: JSON.stringify({
+              //     user_id,
+              //     password,
+              //   }),
               // });
+              signIn("credentials", {
+                user_id: data.user_id,
+                password: data.password,
+                redirect: true,
+                callbackUrl: "/",
+              });
               // mutate(data);
               // signIn(data.user_id, data.password);
-              // console.log(data);
+              console.log(data);
             },
             (errors) => console.log(errors),
           )}
@@ -128,7 +128,7 @@ export default function SignIn() {
           </button>
           <p className="text-xs text-gray-500 mt-3">
             아직 회원이 아니신가요?
-            <Link className="text-indigo-600 mx-2" href="/signUp">
+            <Link className="text-teal-600 mx-2" href="/signUp">
               회원가입
             </Link>
           </p>
