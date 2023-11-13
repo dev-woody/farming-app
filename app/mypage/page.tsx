@@ -1,10 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { getUsers, signOut } from "../api/users";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+// import { useSession, signOut } from "next-auth/react";
 
-export default function Home() {
-  const { data: session } = useSession();
+export default function MyPage() {
+  const { data: user } = useQuery({ queryKey: ["user"], queryFn: getUsers });
+  const route = useRouter();
+  // const { data: session } = useSession();
 
   return (
     <div className="container px-5 md:py-12 py-2 mx-auto">
@@ -18,15 +23,16 @@ export default function Home() {
             <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-white-700">
               <img
                 className="h-full w-full rounded-full"
-                src={`/api/nest${session?.user?.profile_img}`}
+                src={
+                  "/2023-10-31T23-45-49.730Z_blank-profile-picture-973460_1280.png" ||
+                  `/api/nest${user?.profile_img}`
+                }
                 alt=""
               />
             </div>
           </div>
           <div className="mt-16 flex flex-col items-center">
-            <h4 className="text-xl font-bold text-teal-700">
-              {session?.user?.name}
-            </h4>
+            <h4 className="text-xl font-bold text-teal-700">{user?.name}</h4>
             <p className="text-base font-normal text-gray-600">
               Product Manager
             </p>
@@ -84,6 +90,7 @@ export default function Home() {
                 type="button"
                 onClick={() => {
                   signOut();
+                  route.push("/");
                 }}
                 className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"
               >

@@ -9,7 +9,7 @@ import {
   PlusSmallIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
@@ -38,6 +38,7 @@ interface PropsSelectOption {
 
 export default function Product({ params }: { params: { id: string } }) {
   const [productItem, setProductItem] = useState<any>();
+
   const [optionItem, setOptionItem] = useState<QuanOptionItem[]>([]);
   const [price, setPrice] = useState<number>(0);
   const [optSelected, setOptSelected] = useState<IOption>();
@@ -45,7 +46,7 @@ export default function Product({ params }: { params: { id: string } }) {
     opt_value: "옵션을 선택해주세요.",
   });
   const newOptionItem = [...optionItem];
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   const default_price = productItem?.options[0]?.option_items[0].opt_price;
 
@@ -126,26 +127,26 @@ export default function Product({ params }: { params: { id: string } }) {
   }
 
   function onAddCart() {
-    if (session && session.user) {
-      customAxios.post(
-        `/api/nest/cart/create`,
-        {
-          user: session.user.uuid,
-          product: productItem.uuid,
-          items: [
-            {
-              uuid: optSelected?.uuid,
-              options: optionItem,
-            },
-          ],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session.user.accessToken}`,
-          },
-        },
-      );
-    }
+    // if (session && session.user) {
+    //   customAxios.post(
+    //     `/api/nest/cart/create`,
+    //     {
+    //       user: session.user.uuid,
+    //       product: productItem.uuid,
+    //       items: [
+    //         {
+    //           uuid: optSelected?.uuid,
+    //           options: optionItem,
+    //         },
+    //       ],
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${session.user.accessToken}`,
+    //       },
+    //     },
+    //   );
+    // }
   }
 
   useEffect(() => {

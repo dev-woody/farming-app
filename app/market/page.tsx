@@ -1,20 +1,10 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import ItemBox from "./components/item";
-import { customAxios } from "../api/createAPI";
 import Image from "next/image";
 
-export default function Market() {
-  const [productList, setProductList] = useState<any[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      customAxios
-        .get(`/api/nest/products`)
-        .then((res) => setProductList(res.data));
-    })();
-  }, []);
+export default async function Market() {
+  const products = await fetch("http://localhost:3000/api/nest/products").then(
+    (res) => res.json(),
+  );
 
   return (
     <section className="text-gray-600 body-font">
@@ -36,7 +26,7 @@ export default function Market() {
           </h1>
         </div>
         <div className="flex flex-wrap -m-4">
-          {productList?.map((product: any) => (
+          {products?.map((product: any) => (
             <ItemBox key={product.uuid} productInfo={product} />
           ))}
         </div>

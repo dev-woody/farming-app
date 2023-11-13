@@ -44,8 +44,8 @@ export default function CartModal({ user }: CartModalProps) {
             <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl">
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">
-                  <span className="font-bold text-teal-600">{user.name}</span>님
-                  환영합니다.
+                  <span className="font-bold text-teal-600">{user?.name}</span>
+                  님 환영합니다.
                 </p>
 
                 <button aria-label="Close cart" onClick={closeCart}>

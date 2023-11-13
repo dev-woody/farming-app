@@ -5,10 +5,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-// import { signIn } from "@/app/api/users";
-import Cookies from "js-cookie";
-import { signIn } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import { signIn } from "@/app/api/users";
 
 interface SubmitForm {
   user_id: string;
@@ -22,15 +20,16 @@ const schema = yup.object({
 
 export default function SignIn() {
   const queryClient = useQueryClient();
-  // const { mutate } = useMutation((userData: SubmitForm) => signIn(userData), {
-  //   onSuccess: (data) => {
-  //     // Cookies.set("access_token", JSON.stringify(data.accessToken), {
-  //     //   expires: 7,
-  //     // });
-  //     queryClient.invalidateQueries(["user", data]);
-  //     route.push("/");
-  //   },
-  // });
+  const { mutate } = useMutation(
+    (userData: SubmitForm) => signIn(userData.user_id, userData.password),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        queryClient.invalidateQueries({ queryKey: ["user"] });
+        route.push("/");
+      },
+    },
+  );
   const route = useRouter();
 
   const {
@@ -55,26 +54,7 @@ export default function SignIn() {
         <form
           onSubmit={handleSubmit(
             async (data) => {
-              // const { user_id, password } = data;
-              // await fetch(`/api/nest/signIn`, {
-              //   method: "POST",
-              //   headers: {
-              //     "Content-Type": "application/json",
-              //   },
-              //   body: JSON.stringify({
-              //     user_id,
-              //     password,
-              //   }),
-              // });
-              signIn("credentials", {
-                user_id: data.user_id,
-                password: data.password,
-                redirect: true,
-                callbackUrl: "/",
-              });
-              // mutate(data);
-              // signIn(data.user_id, data.password);
-              console.log(data);
+              mutate(data);
             },
             (errors) => console.log(errors),
           )}
@@ -122,7 +102,7 @@ export default function SignIn() {
           </button> */}
           <button
             type="submit"
-            className="text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+            className="text-white bg-teal-600 border-0 py-2 px-8 focus:outline-none hover:bg-teal-600 rounded text-lg"
           >
             로그인
           </button>
