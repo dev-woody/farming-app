@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import {cookies } from 'next/headers'
-
 // const access_token = cookies().get('ACCESS_TOKEN');
 
 export const customAxios = axios.create({

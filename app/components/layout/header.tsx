@@ -1,10 +1,7 @@
 import Link from "next/link";
-import { SessionProvider } from "next-auth/react";
-import { cookies } from "next/headers";
 import SignInButton from "../styles/signinBtn";
 
 export default function Header() {
-  const cookieStore = cookies();
   return (
     <header className="text-gray-600 body-font">
       <div className="container mx-auto flex flex-wrap p-5 md:justify-normal justify-between md:flex-row md:items-center">

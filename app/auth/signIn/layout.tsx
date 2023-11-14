@@ -14,7 +14,6 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(["user"], getUsers);
   const dehydratedState = dehydrate(queryClient);
 
   return <Hydrate state={dehydratedState}>{children}</Hydrate>;

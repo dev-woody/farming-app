@@ -8,22 +8,27 @@ export interface User {
 }
 
 export async function getUsers() {
-  return await fetch("http://localhost:3000/api/nest/users").then((res) =>
-    res.json(),
-  );
+  return accessAxios.get(`/api/nest/users`).then((res) => res.data);
+  // return await fetch("http://localhost:3000/api/nest/users").then((res) =>
+  //   res.json(),
+  // );
 }
 
 export async function signIn(user_id: string, password: string) {
-  return await fetch(`http://localhost:3000/api/nest/signIn`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      user_id,
-      password,
-    }),
-  }).then((res) => res.json());
+  try {
+    return await fetch(`http://localhost:3000/api/nest/signIn`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        password,
+      }),
+    }).then((res) => res.json());
+  } catch (e) {
+    alert(e);
+  }
 }
 
 export async function signOut() {

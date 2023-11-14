@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "@/app/api/users";
 
 interface SubmitForm {
@@ -25,8 +25,10 @@ export default function SignIn() {
     {
       onSuccess: (data) => {
         console.log(data);
-        queryClient.invalidateQueries({ queryKey: ["user"] });
-        route.push("/");
+        if (data.success) {
+          localStorage.setItem("access_token", data.data);
+          route.push("/");
+        }
       },
     },
   );

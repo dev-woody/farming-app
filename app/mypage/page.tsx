@@ -1,14 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { getUsers, signOut } from "../api/users";
-import { useQuery } from "@tanstack/react-query";
+import { signOut } from "../api/users";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 // import { useSession, signOut } from "next-auth/react";
 
 export default function MyPage() {
-  const { data: user } = useQuery({ queryKey: ["user"], queryFn: getUsers });
   const route = useRouter();
+  const queryClient = useQueryClient();
+  const user = queryClient.getQueryData(["user"]);
   // const { data: session } = useSession();
 
   return (
@@ -16,18 +18,23 @@ export default function MyPage() {
       <div className="flex flex-col justify-start items-center">
         <div className="relative flex flex-col items-center rounded-[10px] border-[1px] border-gray-200 w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-md shadow-[#F3F3F3] dark:border-[#ffffff33] dark:!bg-white dark:text-white dark:shadow-none">
           <div className="relative flex h-32 w-full justify-center rounded-xl bg-cover">
-            <img
-              src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/banner.ef572d78f29b0fee0a09.png"
+            <Image
+              width={100}
+              height={100}
+              src="/bgbanner.png"
               className="absolute flex h-32 w-full justify-center rounded-xl bg-cover"
+              alt="user-background"
             />
             <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-white-700">
-              <img
+              <Image
+                width={100}
+                height={100}
                 className="h-full w-full rounded-full"
                 src={
-                  "/2023-10-31T23-45-49.730Z_blank-profile-picture-973460_1280.png" ||
-                  `/api/nest${user?.profile_img}`
+                  `/api/nest${user?.profile_img}` ||
+                  "/2023-10-31T23-45-49.730Z_blank-profile-picture-973460_1280.png"
                 }
-                alt=""
+                alt="profile"
               />
             </div>
           </div>
@@ -90,6 +97,7 @@ export default function MyPage() {
                 type="button"
                 onClick={() => {
                   signOut();
+                  localStorage.removeItem("access_token");
                   route.push("/");
                 }}
                 className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"
