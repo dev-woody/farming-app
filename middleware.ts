@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 
 export function middleware(request: NextRequest) {
-  const jwt = request.cookies.get("ACCESS_TOKEN");
+  const jwt = request.cookies.get("accessToken");
   if (!jwt) {
       return NextResponse.redirect(new URL('/signIn', request.url))
   }

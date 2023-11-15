@@ -5,6 +5,7 @@ import Header from "../components/layout/header";
 import Footer from "../components/layout/footer";
 import Providers from "../components/providers";
 import SProviders from "../components/sessionProviders";
+import RecoilRootProvider from "@/components/recoilProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,10 +45,12 @@ export default function RootLayout({
 			<body
 				className={inter.className + " flex flex-col min-w-screen min-h-screen"}
 			>
-				<Providers>
-					<div className="grow">{children}</div>
-					<Footer />
-				</Providers>
+				<RecoilRootProvider>
+					<Providers>
+						<div className="grow">{children}</div>
+						<Footer />
+					</Providers>
+				</RecoilRootProvider>
 			</body>
 		</html>
 	);

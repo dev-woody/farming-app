@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { getUsers, signOut } from "../api/users";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { use } from "react";
+import { useResetRecoilState } from "recoil";
+import { LoginState } from "@/common/state/loginState";
 // import { useSession, signOut } from "next-auth/react";
 
 export default function MyPage() {
 	const user = use(getUsers());
+	const resetUser = useResetRecoilState(LoginState);
 	const route = useRouter();
 	// const queryClient = useQueryClient();
 	// const user = queryClient.getQueryData(["user"]);
@@ -99,6 +101,8 @@ export default function MyPage() {
 								type="button"
 								onClick={() => {
 									signOut();
+									resetUser;
+									route.push("/");
 								}}
 								className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"
 							>

@@ -6,8 +6,11 @@ import HeaderMenu from "@/components/menu";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/app/api/users";
+import { useRecoilValue } from "recoil";
+import { LoginState } from "@/common/state/loginState";
 
-export default function SignInButton({ user }: { user: any }) {
+export default function SignInButton() {
+	const user = useRecoilValue(LoginState);
 	// const isToken = typeof token === "string";
 	// const user = await fetch(`http://localhost:3000/api/nest/users`, {
 	//   headers: {
@@ -56,7 +59,7 @@ export default function SignInButton({ user }: { user: any }) {
 
 	return (
 		<>
-			{user ? (
+			{user.success ? (
 				<div className="flex">
 					<Link href="/mypage/cart">
 						<ShoppingBagIcon className="w-6 h-6 md:mr-4" />
@@ -64,12 +67,14 @@ export default function SignInButton({ user }: { user: any }) {
 					<Link href="/mypage" className="md:flex hidden items-center">
 						<UserIcon className="w-6 h-6" />
 						<span className="ml-2">
-							<span className="text-teal-600 font-bold">{user?.name}</span>님
-							환영합니다.
+							<span className="text-teal-600 font-bold">
+								{user?.data?.name}
+							</span>
+							님 환영합니다.
 						</span>
 					</Link>
 					<div className="md:hidden flex justify-end md:w-1/3 ml-4">
-						<HeaderMenu user={user} />
+						<HeaderMenu user={user?.data} />
 					</div>
 				</div>
 			) : (

@@ -1,28 +1,33 @@
 import Link from "next/link";
 import SignInButton from "../styles/signinBtn";
-import { cookies } from "next/headers";
-import { getUsers } from "@/app/api/users";
+// import { cookies } from "next/headers";
 
 export default async function Header() {
-	const cookieStore = cookies();
-	const accessTokenObj = cookieStore.get("accessToken");
-	const refreshTokenObj = cookieStore.get("refreshToken");
-	const accessToken = accessTokenObj?.value;
-	const refreshToken = refreshTokenObj?.value;
+	// const cookieStore = cookies();
+	// const accessTokenObj = cookieStore.get("accessToken");
+	// const refreshTokenObj = cookieStore.get("refreshToken");
+	// const accessToken = accessTokenObj?.value;
+	// const refreshToken = refreshTokenObj?.value;
 
-	console.log("accessToken : ", accessToken);
-	console.log("refreshToken : ", refreshToken);
+	// console.log("accessToken : ", accessToken);
+	// console.log("refreshToken : ", refreshToken);
 
-	let loginData;
-	let userInfo;
-	if (refreshToken) {
-		loginData = await fetch("http://localhost:3000/api/nest/users").then(
-			(res) => res.json(),
-		);
-
-		userInfo = loginData?.data;
-		console.log(loginData);
-	}
+	// let loginData;
+	// let userInfo;
+	// if (accessToken) {
+	// 	loginData = await fetch("http://localhost:3000/api/nest/users", {
+	// 		credentials: "include",
+	// 		method: "GET",
+	// 		headers: {
+	// 			Accept: "application/json",
+	// 			"Content-Type": "application/json",
+	// 		},
+	// 	}).then((res) => {
+	// 		console.log(res);
+	// 		return res.json();
+	// 	});
+	// 	userInfo = loginData?.data;
+	// }
 
 	return (
 		<header className="text-gray-600 body-font">
@@ -47,7 +52,7 @@ export default async function Header() {
 						커뮤니티
 					</Link>
 				</nav>
-				<SignInButton user={userInfo} />
+				<SignInButton />
 			</div>
 		</header>
 	);
