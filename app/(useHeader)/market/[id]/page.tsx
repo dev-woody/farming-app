@@ -1,7 +1,7 @@
 "use client";
 
 import { accessAxios, customAxios } from "@/app/api/createAPI";
-import StyleTab from "@/app/components/styles/tabs";
+import StyleTab from "@/components/styles/tabs";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import {

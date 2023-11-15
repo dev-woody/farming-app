@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Seo from "../components/layout/seo";
+import Seo from "../../components/layout/seo";
 import AddressForm from "./components/addressForm";
-import StSelect from "../components/styles/selected";
+import StSelect from "../../components/styles/selected";
 import TossPay from "./components/toss";
 import { accessAxios } from "../api/createAPI";
-import StModal from "../components/styles/modal";
+import StModal from "../../components/styles/modal";
 
 export default function Home() {
   const [user, setUser] = useState({

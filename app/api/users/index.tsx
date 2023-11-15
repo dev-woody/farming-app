@@ -1,41 +1,38 @@
 import { accessAxios, customAxios } from "../createAPI";
 
 export interface User {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
+	userId: number;
+	id: number;
+	title: string;
+	body: string;
 }
 
 export async function getUsers() {
-  return accessAxios.get(`/api/nest/users`).then((res) => res.data);
-  // return await fetch("http://localhost:3000/api/nest/users").then((res) =>
-  //   res.json(),
-  // );
+	return await fetch("http://localhost:3000/api/nest/users").then((res) =>
+		res.json(),
+	);
 }
 
 export async function signIn(user_id: string, password: string) {
-  try {
-    return await fetch(`http://localhost:3000/api/nest/signIn`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id,
-        password,
-      }),
-    }).then((res) => res.json());
-  } catch (e) {
-    alert(e);
-  }
+	const signInData = await fetch(`http://localhost:3000/api/nest/signIn`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			user_id,
+			password,
+		}),
+	}).then((res) => res.json());
+	localStorage.setItem("access-token", signInData.data);
+	return signInData;
 }
 
 export async function signOut() {
-  return await fetch("http://localhost:3000/api/nest/signout", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
+	return await fetch("http://localhost:3000/api/nest/signout", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	}).then((res) => res.json());
 }
