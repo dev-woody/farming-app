@@ -1,6 +1,6 @@
-declare interface ServerRes {
+declare interface ServerRes<T> {
   success: boolean,
-  data: any | null,
+  data: T | null,
   message: string | null,
   code: number | null
 }

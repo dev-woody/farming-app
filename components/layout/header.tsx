@@ -1,5 +1,6 @@
 import Link from "next/link";
 import SignInButton from "../styles/signinBtn";
+import { Suspense } from "react";
 // import { cookies } from "next/headers";
 
 export default async function Header() {
@@ -52,7 +53,18 @@ export default async function Header() {
 						커뮤니티
 					</Link>
 				</nav>
-				<SignInButton />
+				<Suspense
+					fallback={
+						<Link
+							className="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"
+							href="/signIn"
+						>
+							LogIn
+						</Link>
+					}
+				>
+					<SignInButton />
+				</Suspense>
 			</div>
 		</header>
 	);

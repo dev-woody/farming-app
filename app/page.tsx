@@ -3,8 +3,6 @@ import Header from "@/components/layout/header";
 export default function Home() {
 	return (
 		<>
-			{/* <section className="text-gray-600 body-font"> */}
-			<Header />
 			<div className="h-96 mb-10 overflow-hidden">
 				<img
 					alt="content"

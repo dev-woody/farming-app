@@ -16,13 +16,15 @@ const config: Config = {
     },
     container: {
       screens: {
-         sm: "100%",
-         md: "100%",
-         lg: "1024px",
-         xl: "1024px"
+          sm: "100%",
+          md: "100%",
+          lg: "1024px",
+          xl: "1024px"
       }
     }
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
 export default config

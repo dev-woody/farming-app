@@ -3,63 +3,31 @@
 import Link from "next/link";
 import { ShoppingBagIcon, UserIcon } from "@heroicons/react/24/outline";
 import HeaderMenu from "@/components/menu";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getUsers } from "@/app/api/users";
 import { useRecoilValue } from "recoil";
-import { LoginState } from "@/common/state/loginState";
+import { LoginState } from "@/common/atom/loginState";
+import { useEffect, useState } from "react";
+import { getUsers } from "@/app/api/users";
 
 export default function SignInButton() {
-	const user = useRecoilValue(LoginState);
-	// const isToken = typeof token === "string";
-	// const user = await fetch(`http://localhost:3000/api/nest/users`, {
-	//   headers: {
-	//     cookie: `ACCESS_TOKEN=${accessToken}`,
-	//   },
-	// }).then((res) => res.json());
-	// const [user, setUser] = useState<IUser>({
-	//   uuid: "",
-	//   user_id: "",
-	//   name: "",
-	//   profile_img: "",
-	//   zip_code: 0,
-	//   address: "",
-	//   address_detail: "",
-	//   email: "",
-	//   phone: "",
-	//   createdAt: "",
-	//   deletedAt: "",
-	//   updatedAt: "",
-	// });
+	const isLogin = useRecoilValue(LoginState);
+	const isLoginCopy = JSON.parse(JSON.stringify(isLogin));
+	const [user, setUser] = useState<any>({});
 
-	// useEffect(() => {
-	//   (async () => {
-	//     const data = await (
-	//       await fetch(`${process.env.NEXTAUTH_URL}/api/nest/users`)
-	//     ).json();
-	//     setUser(data);
-	//   })();
-	// }, []);
-	// const { data: session } = useSession();
-
-	// const cookieStore = cookies();
-	// const onlogin = cookieStore.get("ACCESS_TOKEN");
-
-	//         const res = await fetch(`${process.env.NEXTAUTH_URL}/api/nest/signIn`, {
-	//           method: 'POST',
-	//           headers: {
-	//             'Content-Type': 'application/json',
-	//           },
-	//           body: JSON.stringify({
-	//             user_id: credentials?.user_id,
-	//             password: credentials?.password,
-	//           }),
-	//         })
-	//         const user = await res.json()
+	useEffect(() => {
+		if (isLogin) {
+			(async () => {
+				const user = await fetch("http://localhost:3000/api/nest/users").then(
+					(res) => res.json(),
+				);
+				setUser(user);
+			})();
+		}
+		setUser({});
+	}, [isLogin]);
 
 	return (
 		<>
-			{user.success ? (
+			{user?.success ? (
 				<div className="flex">
 					<Link href="/mypage/cart">
 						<ShoppingBagIcon className="w-6 h-6 md:mr-4" />

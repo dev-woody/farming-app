@@ -1,18 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { getUsers, signOut } from "../api/users";
+import { signOut } from "../api/users";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { use } from "react";
-import { useResetRecoilState } from "recoil";
-import { LoginState } from "@/common/state/loginState";
+import { useResetRecoilState, useRecoilValue } from "recoil";
+import { LoginState } from "@/common/atom/loginState";
+import { useEffect, useState } from "react";
 // import { useSession, signOut } from "next-auth/react";
 
 export default function MyPage() {
-	const user = use(getUsers());
 	const resetUser = useResetRecoilState(LoginState);
 	const route = useRouter();
+
+	const isLogin = useRecoilValue(LoginState);
+	const [user, setUser] = useState<any>();
+
+	useEffect(() => {
+		if (isLogin) {
+			(async () => {
+				const user = await fetch("http://localhost:3000/api/nest/users").then(
+					(res) => res.json(),
+				);
+				setUser(user.data);
+			})();
+		}
+	}, []);
 	// const queryClient = useQueryClient();
 	// const user = queryClient.getQueryData(["user"]);
 	// const { data: session } = useSession();
@@ -101,7 +114,7 @@ export default function MyPage() {
 								type="button"
 								onClick={() => {
 									signOut();
-									resetUser;
+									resetUser();
 									route.push("/");
 								}}
 								className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"

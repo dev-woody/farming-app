@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/app/api/users";
 import { useSetRecoilState } from "recoil";
-import { LoginState } from "@/common/state/loginState";
+import { LoginState } from "@/common/atom/loginState";
 
 interface SubmitForm {
 	user_id: string;
@@ -27,9 +27,8 @@ export default function SignIn() {
 		(userData: SubmitForm) => signIn(userData.user_id, userData.password),
 		{
 			onSuccess: (data) => {
-				console.log(data);
 				if (data.success) {
-					setLogin(() => data);
+					setLogin(() => true);
 					route.push("/");
 				}
 			},

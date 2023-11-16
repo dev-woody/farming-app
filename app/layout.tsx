@@ -47,6 +47,7 @@ export default function RootLayout({
 			>
 				<RecoilRootProvider>
 					<Providers>
+						<Header />
 						<div className="grow">{children}</div>
 						<Footer />
 					</Providers>
