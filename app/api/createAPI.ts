@@ -1,20 +1,26 @@
-// "use client"
+"use client" 
+
+import { useRecoilValue } from "recoil";
+import { TokenState } from "@/common/atom/loginState";
 
 import axios from "axios";
-import {cookies } from 'next/headers'
-// const access_token = cookies().get('ACCESS_TOKEN');
 
-export const customAxios = axios.create({
+const customAxios = axios.create({
   headers: {
     "Content-Type": "application/json; charset=utf-8",
     validateStatus: false,
   },
 });
 
-export const accessAxios = axios.create({
+const accessAxios = (() => {
+  const tokenState = useRecoilValue(TokenState);
+  return axios.create({
   headers: {
     "Content-Type": "application/json",
-    // "Authorization": `Bearer ${access_token}`,
+    "Authorization": `Bearer ${tokenState}`,
     validateStatus: false,
   },
-});
+})
+  })()
+
+export {customAxios, accessAxios}

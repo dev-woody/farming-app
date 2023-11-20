@@ -5,19 +5,19 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useResetRecoilState, useRecoilValue } from "recoil";
-import { LoginState } from "@/common/atom/loginState";
+import { TokenState } from "@/common/atom/loginState";
 import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 export default function MyPage() {
-	const resetUser = useResetRecoilState(LoginState);
+	const resetToken = useResetRecoilState(TokenState);
 	const route = useRouter();
 
-	const isLogin = useRecoilValue(LoginState);
+	const tokenState = useRecoilValue(TokenState);
 	const [user, setUser] = useState<any>();
 
 	useEffect(() => {
-		if (isLogin) {
+		if (typeof tokenState === "string") {
 			(async () => {
 				const user = await fetch("http://localhost:3000/api/nest/users").then(
 					(res) => res.json(),

@@ -4,28 +4,30 @@ import Link from "next/link";
 import { ShoppingBagIcon, UserIcon } from "@heroicons/react/24/outline";
 import HeaderMenu from "@/components/menu";
 import { useRecoilValue } from "recoil";
-import { LoginState } from "@/common/atom/loginState";
+import { TokenState } from "@/common/atom/loginState";
 import { useEffect, useState } from "react";
 import { getUsers } from "@/app/api/users";
 import { useSession } from "next-auth/react";
 
 export default function SignInButton() {
-	const { data: user } = useSession();
-	// const isLogin = useRecoilValue(LoginState);
-	// const isLoginCopy = JSON.parse(JSON.stringify(isLogin));
-	// const [user, setUser] = useState<any>({});
+	// const { data: user } = useSession();
+	const tokenState = useRecoilValue(TokenState);
+	const [user, setUser] = useState<any>({});
 
-	// useEffect(() => {
-	// 	if (isLogin) {
-	// 		(async () => {
-	// 			const user = await fetch("http://localhost:3000/api/nest/users").then(
-	// 				(res) => res.json(),
-	// 			);
-	// 			setUser(user);
-	// 		})();
-	// 	}
-	// 	setUser({});
-	// }, [isLogin]);
+	useEffect(() => {
+		if (typeof tokenState === "string") {
+			console.log(tokenState);
+			(async () => {
+				const user = await fetch("http://localhost:3000/api/nest/users", {
+					headers: {
+						Authorization: `Bearer ${tokenState}`,
+					},
+				}).then((res) => res.json());
+				setUser(user);
+			})();
+		}
+		setUser({});
+	}, [tokenState]);
 
 	return (
 		<>
