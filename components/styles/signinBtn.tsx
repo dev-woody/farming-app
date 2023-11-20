@@ -7,23 +7,25 @@ import { useRecoilValue } from "recoil";
 import { LoginState } from "@/common/atom/loginState";
 import { useEffect, useState } from "react";
 import { getUsers } from "@/app/api/users";
+import { useSession } from "next-auth/react";
 
 export default function SignInButton() {
-	const isLogin = useRecoilValue(LoginState);
-	const isLoginCopy = JSON.parse(JSON.stringify(isLogin));
-	const [user, setUser] = useState<any>({});
+	const { data: user } = useSession();
+	// const isLogin = useRecoilValue(LoginState);
+	// const isLoginCopy = JSON.parse(JSON.stringify(isLogin));
+	// const [user, setUser] = useState<any>({});
 
-	useEffect(() => {
-		if (isLogin) {
-			(async () => {
-				const user = await fetch("http://localhost:3000/api/nest/users").then(
-					(res) => res.json(),
-				);
-				setUser(user);
-			})();
-		}
-		setUser({});
-	}, [isLogin]);
+	// useEffect(() => {
+	// 	if (isLogin) {
+	// 		(async () => {
+	// 			const user = await fetch("http://localhost:3000/api/nest/users").then(
+	// 				(res) => res.json(),
+	// 			);
+	// 			setUser(user);
+	// 		})();
+	// 	}
+	// 	setUser({});
+	// }, [isLogin]);
 
 	return (
 		<>

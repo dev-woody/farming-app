@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { signOut } from "../api/users";
+// import { signOut } from "../api/users";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useResetRecoilState, useRecoilValue } from "recoil";
 import { LoginState } from "@/common/atom/loginState";
 import { useEffect, useState } from "react";
-// import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 
 export default function MyPage() {
 	const resetUser = useResetRecoilState(LoginState);
@@ -114,8 +114,6 @@ export default function MyPage() {
 								type="button"
 								onClick={() => {
 									signOut();
-									resetUser();
-									route.push("/");
 								}}
 								className="block text-start px-4 py-4 w-full sm:text-xl text-lg rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 cursor-pointer"
 							>

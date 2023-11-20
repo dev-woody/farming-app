@@ -6,9 +6,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/app/api/users";
+// import { signIn } from "@/app/api/users";
 import { useSetRecoilState } from "recoil";
 import { LoginState } from "@/common/atom/loginState";
+import { signIn } from "next-auth/react";
 
 interface SubmitForm {
 	user_id: string;
@@ -23,17 +24,17 @@ const schema = yup.object({
 export default function SignIn() {
 	const setLogin = useSetRecoilState(LoginState);
 
-	const { mutate } = useMutation(
-		(userData: SubmitForm) => signIn(userData.user_id, userData.password),
-		{
-			onSuccess: (data) => {
-				if (data.success) {
-					setLogin(() => true);
-					route.push("/");
-				}
-			},
-		},
-	);
+	// const { mutate } = useMutation(
+	// 	(userData: SubmitForm) => signIn(userData.user_id, userData.password),
+	// 	{
+	// 		onSuccess: (data) => {
+	// 			if (data.success) {
+	// 				setLogin(() => true);
+	// 				route.push("/");
+	// 			}
+	// 		},
+	// 	},
+	// );
 	const route = useRouter();
 
 	const {
@@ -58,7 +59,24 @@ export default function SignIn() {
 				<form
 					onSubmit={handleSubmit(
 						async (data) => {
-							mutate(data);
+							signIn("credentials", {
+								user_id: data.user_id,
+								password: data.password,
+								redirect: true,
+								callbackUrl: "/",
+							});
+							// const { user_id, password } = data;
+							// await fetch(`/api/nest/signIn`, {
+							// 	method: "POST",
+							// 	headers: {
+							// 		"Content-Type": "application/json",
+							// 	},
+							// 	body: JSON.stringify({
+							// 		user_id,
+							// 		password,
+							// 	}),
+							// });
+							// mutate(data);
 						},
 						(errors) => console.log(errors),
 					)}

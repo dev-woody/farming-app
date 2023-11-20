@@ -45,13 +45,15 @@ export default function RootLayout({
 			<body
 				className={inter.className + " flex flex-col min-w-screen min-h-screen"}
 			>
-				<RecoilRootProvider>
-					<Providers>
-						<Header />
-						<div className="grow">{children}</div>
-						<Footer />
-					</Providers>
-				</RecoilRootProvider>
+				<SProviders>
+					<RecoilRootProvider>
+						<Providers>
+							<Header />
+							<div className="grow">{children}</div>
+							<Footer />
+						</Providers>
+					</RecoilRootProvider>
+				</SProviders>
 			</body>
 		</html>
 	);
